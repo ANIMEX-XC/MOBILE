@@ -22,8 +22,6 @@ export interface IUserCreateRequestModel {
   userName: string;
   userContact: string;
   userPassword: string;
-  userRole: "SuperAdmin" | "Admin" | "User";
-  userLevel: "Silver" | "Gold" | "Platinum";
 }
 
 export interface IUserLoginRequestModel {

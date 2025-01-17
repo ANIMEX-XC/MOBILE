@@ -29,7 +29,7 @@ export default function AppNavigations() {
       console.log(token);
       console.log(isAuth);
       setInit({
-        isAuth,
+        isAuth: true,
       });
     } catch (error: any) {
       console.log(error);

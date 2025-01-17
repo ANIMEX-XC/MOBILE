@@ -6,6 +6,8 @@ import { TabNavigation } from "./tabNavigation";
 import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
+import MyProductScreen from "../screens/myProduct/ProductScreen";
+import CreateProductScreen from "../screens/myProduct/CreateProductScreen";
 
 const Stack = createNativeStackNavigator<INavigationParamList>();
 
@@ -38,6 +40,8 @@ export default function StackNavigations() {
             }}
           />
           <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="MyProduct" component={MyProductScreen} />
+          <Stack.Screen name="CreateProduct" component={CreateProductScreen} />
         </>
       )}
     </Stack.Navigator>
