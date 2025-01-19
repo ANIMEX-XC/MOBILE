@@ -169,7 +169,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
         <View className="px-4">
           <HStack className="justify-between items-center mb-4">
             <Text className="text-xl font-bold">Live Auctions</Text>
-            <Pressable>
+            <Pressable onPress={() => navigation.navigate("Auction")}>
               <Text className="text-[#5730ef]">See All</Text>
             </Pressable>
           </HStack>
@@ -178,9 +178,11 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
             {auctions.map((item) => (
               <Pressable
                 key={item.id}
-                // onPress={() =>
-                //   navigation.navigate("AuctionDetail", { id: item.id })
-                // }
+                onPress={() =>
+                  navigation.navigate("DetailAuction", {
+                    id: item.id.toString(),
+                  })
+                }
               >
                 <View className="bg-gray-50 rounded-xl p-3 flex-row">
                   <Image
@@ -214,7 +216,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
         <View className="px-4 mt-6 mb-6">
           <HStack className="justify-between items-center mb-4">
             <Text className="text-xl font-bold">Featured Pets</Text>
-            <Pressable>
+            <Pressable onPress={() => navigation.navigate("Product")}>
               <Text className="text-[#5730ef]">See All</Text>
             </Pressable>
           </HStack>
@@ -225,9 +227,8 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
                 <ProductCard
                   key={pet.id}
                   item={pet}
-                  onPress={
-                    // (id) => navigation.navigate("ProductDetail", { id })
-                    () => {}
+                  onPress={() =>
+                    navigation.navigate("DetailProduct", { id: pet.id })
                   }
                   className="w-48"
                 />

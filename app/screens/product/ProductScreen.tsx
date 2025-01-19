@@ -83,7 +83,7 @@ export default function ProductScreen({ navigation }: ProductScreenPropsTypes) {
   ];
 
   const handleProductPress = (id: string) => {
-    // navigation.navigate("ProductDetail", { id });
+    navigation.navigate("DetailProduct", { id });
   };
 
   const handleFavoritePress = (id: string) => {

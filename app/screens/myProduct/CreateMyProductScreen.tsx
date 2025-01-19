@@ -38,14 +38,14 @@ import {
   FormControlErrorText,
 } from "@/app/components/ui/form-control";
 
-type CreateProductScreenPropsTypes = NativeStackScreenProps<
+type CreateMyProductScreenPropsTypes = NativeStackScreenProps<
   INavigationParamList,
-  "CreateProduct"
+  "CreateMyProduct"
 >;
 
-export default function CreateProductScreen({
+export default function CreateMyProductScreen({
   navigation,
-}: CreateProductScreenPropsTypes) {
+}: CreateMyProductScreenPropsTypes) {
   const [images, setImages] = useState<any[]>([]);
 
   const {

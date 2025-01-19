@@ -56,9 +56,7 @@ export default function AuctionScreen({ navigation }: AuctionScreenPropsTypes) {
         <HStack className="justify-between items-center mb-4">
           <Text className="text-xl font-bold text-white">Live Auctions</Text>
           <HStack className="space-x-4">
-            <Pressable
-            // onPress={() => navigation.navigate("Notifications")}
-            >
+            <Pressable onPress={() => navigation.navigate("Notification")}>
               <MaterialIcons name="notifications" size={24} color="white" />
             </Pressable>
             <Pressable
@@ -123,9 +121,8 @@ export default function AuctionScreen({ navigation }: AuctionScreenPropsTypes) {
           <View className="p-2">
             <ProductCard
               item={item}
-              onPress={
-                // (id) => navigation.navigate("AuctionDetail", { id })
-                () => {}
+              onPress={() =>
+                navigation.navigate("DetailAuction", { id: item.id })
               }
               className="w-full"
             />

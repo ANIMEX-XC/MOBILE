@@ -224,7 +224,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
           <MenuItem
             icon="edit"
             title="Edit Profile"
-            // onPress={() => navigation.navigate("EditProfile")}
+            onPress={() => navigation.navigate("EditProfile", { id: "1" })}
           />
           <Divider />
           <MenuItem

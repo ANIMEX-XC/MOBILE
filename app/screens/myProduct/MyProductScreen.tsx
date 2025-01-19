@@ -9,6 +9,16 @@ import { Product } from "@/app/components/types/product";
 import { HStack } from "@/app/components/ui/hstack";
 import { Pressable } from "@/app/components/ui/pressable";
 import { ScrollView } from "@/app/components/ui/scroll-view";
+import {
+  Modal,
+  ModalBackdrop,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  ButtonText,
+} from "@/app/components/ui";
 
 type MyProductScreenPropsTypes = NativeStackScreenProps<
   INavigationParamList,
@@ -84,20 +94,39 @@ export default function MyProductScreen({
     { id: "archived", name: "Archived", icon: "archive" },
   ];
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
+
   const handleProductPress = (id: string) => {
     // navigation.navigate("EditProduct", { id });
   };
 
   const handleDeleteProduct = (id: string) => {
-    // Add delete confirmation dialog
-    setProducts(products.filter((product) => product.id !== id));
+    setSelectedProductId(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedProductId) {
+      // Call your delete function here
+      console.log(`Product with ID ${selectedProductId} deleted.`);
+      // Close the modal
+      setShowDeleteModal(false);
+      setSelectedProductId(null);
+      setProducts(
+        products.filter((product) => product.id !== selectedProductId)
+      );
+    }
   };
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: false,
+      headerShown: true,
+      title: "My Products",
     });
-  }, []);
+  }, [navigation]);
 
   return (
     <View className="flex-1 bg-gray-50">
@@ -111,7 +140,7 @@ export default function MyProductScreen({
             <Text className="text-xl font-bold">My Products</Text>
           </HStack>
           <Pressable
-            onPress={() => navigation.navigate("CreateProduct")}
+            onPress={() => navigation.navigate("CreateMyProduct")}
             className="bg-[#5730ef] px-4 py-2 rounded-full"
           >
             <HStack className="items-center space-x-1">
@@ -184,9 +213,9 @@ export default function MyProductScreen({
                 <MaterialIcons name="delete" size={18} color="white" />
               </Pressable>
               <Pressable
-                // onPress={() =>
-                //   navigation.navigate("EditProduct", { id: item.id })
-                // }
+                onPress={() =>
+                  navigation.navigate("EditMyProduct", { id: item.id })
+                }
                 className="w-8 h-8 bg-[#5730ef]/90 rounded-full items-center justify-center"
               >
                 <MaterialIcons name="edit" size={18} color="white" />
@@ -203,6 +232,25 @@ export default function MyProductScreen({
         contentContainerStyle={{ paddingTop: 16, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
       />
+
+      {/* Confirmation Modal */}
+      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+        <ModalBackdrop />
+        <ModalContent>
+          <ModalHeader>Confirm Deletion</ModalHeader>
+          <ModalBody>
+            <Text>Are you sure you want to delete this product?</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="outline" onPress={() => setShowDeleteModal(false)}>
+              <ButtonText>Cancel</ButtonText>
+            </Button>
+            <Button onPress={confirmDelete}>
+              <ButtonText>Delete</ButtonText>
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </View>
   );
 }
