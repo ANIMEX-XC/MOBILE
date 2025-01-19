@@ -8,6 +8,8 @@ import RegisterScreen from "../screens/auth/RegisterScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import MyProductScreen from "../screens/myProduct/ProductScreen";
 import CreateProductScreen from "../screens/myProduct/CreateProductScreen";
+import AddressScreen from "../screens/address/AddressScreen";
+import OrderScreen from "../screens/orders/OrderScreen";
 
 const Stack = createNativeStackNavigator<INavigationParamList>();
 
@@ -42,6 +44,8 @@ export default function StackNavigations() {
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="MyProduct" component={MyProductScreen} />
           <Stack.Screen name="CreateProduct" component={CreateProductScreen} />
+          <Stack.Screen name="Address" component={AddressScreen} />
+          <Stack.Screen name="Order" component={OrderScreen} />
         </>
       )}
     </Stack.Navigator>

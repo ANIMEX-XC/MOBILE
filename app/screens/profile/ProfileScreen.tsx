@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { INavigationParamList } from "../../models/navigationModel";
 import { View, Text, VStack } from "@/app/components/ui";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -9,6 +9,21 @@ import { Pressable } from "@/app/components/ui/pressable";
 import { Image } from "@/app/components/ui/image";
 import { Divider } from "@/app/components/ui/divider";
 import { ScrollView } from "@/app/components/ui/scroll-view";
+import { AlertDialog } from "@/app/components/ui/alert-dialog";
+import { Button } from "@/app/components/ui/button";
+import { ButtonText } from "@/app/components/ui";
+import {
+  Modal,
+  ModalBackdrop,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalCloseButton,
+  Icon,
+  CloseIcon,
+  Heading,
+} from "@/app/components/ui";
 
 type ProfileScreenPropsTypes = NativeStackScreenProps<
   INavigationParamList,
@@ -54,6 +69,8 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
   const userLevel = "Gold"; // Replace with actual user level from your state management
   const userName = "John Doe"; // Replace with actual user name
   const userEmail = "john.doe@example.com"; // Replace with actual user email
+
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -221,7 +238,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
           <MenuItem
             icon="shopping-bag"
             title="My Orders"
-            // onPress={() => navigation.navigate("Orders")}
+            onPress={() => navigation.navigate("Order")}
             showBadge
             badgeText="2 Active"
           />
@@ -229,7 +246,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
           <MenuItem
             icon="location-on"
             title="My Addresses"
-            // onPress={() => navigation.navigate("Addresses")}
+            onPress={() => navigation.navigate("Address")}
           />
           <Divider />
           <MenuItem
@@ -253,13 +270,46 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
           <MenuItem
             icon="logout"
             title="Logout"
-            onPress={() => {
-              // Add your logout logic here
-              navigation.navigate("Login");
-            }}
+            onPress={() => setShowLogoutModal(true)}
           />
         </VStack>
       </ScrollView>
+
+      <Modal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        size="md"
+      >
+        <ModalBackdrop />
+        <ModalContent>
+          <ModalHeader>
+            <Heading size="md">Logout</Heading>
+            <ModalCloseButton>
+              <Icon as={CloseIcon} size="md" />
+            </ModalCloseButton>
+          </ModalHeader>
+          <ModalBody>
+            <Text>Are you sure you want to logout?</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              variant="outline"
+              onPress={() => setShowLogoutModal(false)}
+              className="mr-2"
+            >
+              <ButtonText>Cancel</ButtonText>
+            </Button>
+            <Button
+              onPress={() => {
+                setShowLogoutModal(false);
+                navigation.navigate("Login");
+              }}
+            >
+              <ButtonText>Logout</ButtonText>
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </View>
   );
 }

@@ -26,8 +26,8 @@ export interface IProductCreateRequestModel {
   productCategoryId: number;
   productPrice: number;
   productWeight: number;
-  productColors: string;
-  productSizes: string;
-  productTransactionType: "Sell" | "Auction" | "Barter" | "PurchaseOrder";
+  productColors?: string;
+  productSizes?: string;
+  productTransactionType?: "Sell" | "Auction" | "Barter" | "PurchaseOrder";
   productImages: IProductImageCreateRequestModel[];
 }

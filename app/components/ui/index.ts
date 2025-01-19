@@ -12,5 +12,9 @@ export * from "./view";
 export * from "./vstack";
 export * from "./image";
 export * from "./textarea";
-
+export * from "./modal";
+export * from "./alert-dialog";
+export * from "./heading";
+export * from "./text";
+export * from "./icon";
 // ... export other components

@@ -10,6 +10,8 @@ export type INavigationParamList = {
   Auction: undefined;
   CreateAuction: undefined;
   Login: undefined;
+  Address: undefined;
   Profile: undefined;
   Settings: undefined;
+  Order: undefined;
 };

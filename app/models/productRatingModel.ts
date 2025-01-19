@@ -7,3 +7,11 @@ export interface IProductRating extends IRootModel {
   productRatingStart: number;
   productRatingDescription: string;
 }
+
+export interface IProductRatingCreateRequest {
+  productRatingId: number;
+  productRatingUserId?: number;
+  productRatingProductId?: number;
+  productRatingStart?: number;
+  productRatingDescription?: string;
+}
