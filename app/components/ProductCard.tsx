@@ -5,6 +5,8 @@ import { HStack } from "@/app/components/ui/hstack";
 import { Pressable } from "@/app/components/ui/pressable";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Product } from "./types/product";
+import { convertNumberToCurrency } from "../utilities/convert";
+import { sliceString } from "../utilities/sliceString";
 
 type ProductCardProps = {
   item: Product;
@@ -64,7 +66,7 @@ export const ProductCard = ({
               <Text className="text-xs text-gray-500">Current Bid</Text>
               <HStack className="justify-between items-center">
                 <Text className="text-[#5730ef] font-bold">
-                  ${item.currentBid}
+                  Rp{convertNumberToCurrency(item.currentBid)}
                 </Text>
                 <HStack className="items-center space-x-1">
                   <MaterialIcons name="timer" size={14} color="#5730ef" />
@@ -75,21 +77,28 @@ export const ProductCard = ({
               </HStack>
             </VStack>
           ) : (
-            <Text className="text-[#5730ef] font-bold">${item.price}</Text>
+            <Text className="text-[#5730ef] font-bold">
+              Rp{convertNumberToCurrency(item.price)}
+            </Text>
           )}
         </View>
 
-        <HStack className="mt-2 items-center space-x-1">
-          <Image
-            source={{
-              uri:
-                item.seller.avatar || "https://example.com/default-avatar.jpg",
-            }}
-            alt="Seller"
-            className="w-5 h-5 rounded-full"
-          />
+        <HStack space="sm" className="mt-2 items-center space-x-1">
+          {item.seller.avatar ? (
+            <Image
+              source={{ uri: item.seller.avatar }}
+              alt="Seller"
+              className="w-5 h-5 rounded-full"
+            />
+          ) : (
+            <View className="w-5 h-5 rounded-full bg-gray-100 items-center justify-center">
+              <Text className="text-xs text-[#5730ef] font-medium">
+                {item.seller.name.charAt(0).toUpperCase()}
+              </Text>
+            </View>
+          )}
           <Text className="text-xs text-gray-500" numberOfLines={1}>
-            {item.seller.name}
+            {sliceString({ text: item.seller.name, length: 10 })}
           </Text>
           {item.seller.verified && (
             <MaterialIcons name="verified" size={14} color="#5730ef" />

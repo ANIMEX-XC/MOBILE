@@ -25,6 +25,9 @@ import { Center } from "@/app/components/ui/center";
 import { Image } from "@/app/components/ui/image";
 import { Heading } from "@/app/components/ui/heading";
 import { COLORS } from "@/app/configs/colors";
+import { useHttp } from "@/app/hooks/useHttp";
+import { useAppContext } from "@/app/context/app.context";
+import { useAuthToken } from "@/app/hooks/token";
 
 type LoginScreenPropsTypes = NativeStackScreenProps<
   INavigationParamList,
@@ -33,6 +36,9 @@ type LoginScreenPropsTypes = NativeStackScreenProps<
 
 export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
   const [showPassword, setShowPassword] = useState(false);
+  const { handlePostRequest } = useHttp();
+  const { init, setInit } = useAppContext();
+  const { setToken } = useAuthToken();
 
   const {
     control,
@@ -40,10 +46,6 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      userName: "",
-      userPassword: "",
-    },
   });
 
   useLayoutEffect(() => {
@@ -52,18 +54,30 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
     });
   }, []);
 
-  const onSubmit = (data: IUserLoginRequestModel) => {
-    console.log(data);
+  const onSubmit = async (payload: IUserLoginRequestModel) => {
+    try {
+      const result = await handlePostRequest({
+        path: "/users/login",
+        body: payload,
+      });
+
+      if (result && result?.data?.token) {
+        setToken(result.data.token);
+        setInit({
+          ...init,
+          isAuth: true,
+        });
+      }
+
+      console.log(result.data.token);
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   return (
-    <View className="flex-1 bg-white justify-center px-4">
+    <View className="flex-1 bg-white justify-center px-6">
       <Center className="mb-8">
-        {/* <Image
-          source={require("@/assets/logo.png")}
-          alt="App Logo"
-          className="w-32 h-32 mb-4"
-        /> */}
         <Heading className="text-2xl font-bold text-[#5730ef] mb-2">
           Welcome Back
         </Heading>
@@ -149,7 +163,7 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
       </Button>
 
       <Center className="flex-row space-x-1">
-        <Text className="text-gray-500">Don't have an account?</Text>
+        <Text className="text-gray-500">Don't have an account? {""}</Text>
         <Text
           className="text-[#5730ef] font-bold"
           onPress={() => navigation.navigate("Register")}

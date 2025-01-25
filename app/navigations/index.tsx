@@ -15,8 +15,7 @@ const MyTheme = {
 };
 
 export default function AppNavigations() {
-  const { handleGetRequest } = useHttp();
-  const { setInit } = useAppContext();
+  const { init, setInit } = useAppContext();
   const { getToken } = useAuthToken();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,10 +25,9 @@ export default function AppNavigations() {
       const token = await getToken();
       const isAuth = token !== null;
 
-      console.log(token);
-      console.log(isAuth);
       setInit({
-        isAuth: true,
+        ...init,
+        isAuth: isAuth,
       });
     } catch (error: any) {
       console.log(error);

@@ -19,6 +19,7 @@ import { Pressable } from "@/app/components/ui/pressable";
 import { Image } from "@/app/components/ui/image";
 import { Center } from "@/app/components/ui/center";
 import { ProductCard } from "@/app/components";
+import { useAppContext } from "@/app/context/app.context";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<
   INavigationParamList,
@@ -43,6 +44,7 @@ type AuctionItem = {
 export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<number>(0);
+  const { init } = useAppContext();
 
   const categories: Category[] = [
     { id: 0, name: "All", icon: "pets" },
@@ -104,9 +106,19 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
             <Text className="text-white text-lg">Welcome Back 👋</Text>
             <Text className="text-white text-2xl font-bold">Pet Auction</Text>
           </VStack>
-          <Pressable onPress={() => navigation.navigate("Profile")}>
-            <MaterialIcons name="account-circle" size={40} color="white" />
-          </Pressable>
+          {init.isAuth === true && (
+            <Pressable onPress={() => navigation.navigate("Profile")}>
+              <MaterialIcons name="account-circle" size={40} color="white" />
+            </Pressable>
+          )}
+          {init.isAuth === false && (
+            <Button
+              className="bg-white"
+              onPress={() => navigation.navigate("Login")}
+            >
+              <ButtonText className="text-[#5730ef]">Login</ButtonText>
+            </Button>
+          )}
         </HStack>
 
         {/* Search Bar */}
@@ -237,16 +249,6 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
           </ScrollView>
         </View>
       </ScrollView>
-
-      {/* Floating Action Button */}
-      {/* <Pressable
-        onPress={() => navigation.navigate("CreateAuction")}
-        className="absolute bottom-6 right-6"
-      >
-        <View className="bg-[#5730ef] w-14 h-14 rounded-full items-center justify-center shadow-lg">
-          <MaterialIcons name="add" size={30} color="white" />
-        </View>
-      </Pressable> */}
     </View>
   );
 }

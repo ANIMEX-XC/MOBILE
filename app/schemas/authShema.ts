@@ -26,6 +26,7 @@ export const registerSchema = z.object({
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(50, "Password must be less than 50 characters"),
+  userRole: z.string(),
 });
 
 export type RegisterFormData = z.infer<typeof registerSchema>;
