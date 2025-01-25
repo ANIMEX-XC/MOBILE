@@ -19,6 +19,8 @@ import { useAppContext } from "../context/app.context";
 import { COLORS } from "../configs/colors";
 import HomeScreen from "../screens/home/HomeScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
+import ProductScreen from "../screens/product/ProductScreen";
+import AuctionScreen from "../screens/auction/AuctionScreen";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -166,16 +168,13 @@ export function TabNavigation() {
           switch (route.name) {
             case "Home":
               return <Feather name="home" size={25} color={color} />;
-            // case "Product":
-            //   return <Feather name="shopping-bag" size={25} color={color} />;
-            // case "Order":
-            //   return (
-            //     <MaterialCommunityIcons
-            //       name="truck-check-outline"
-            //       size={30}
-            //       color={color}
-            //     />
-            //   );
+            case "Auction":
+              return (
+                <MaterialCommunityIcons name="fire" size={28} color={color} />
+              );
+            case "Product":
+              return <Feather name="shopping-bag" size={25} color={color} />;
+
             case "Profile":
               return <AntDesign name="user" size={30} color={color} />;
             default:
@@ -190,6 +189,18 @@ export function TabNavigation() {
         name="Home"
         options={{ tabBarLabel: "Home" }}
         component={HomeScreen}
+      />
+
+      <Tab.Screen
+        name="Auction"
+        options={{ tabBarLabel: "Auction" }}
+        component={AuctionScreen}
+      />
+
+      <Tab.Screen
+        name="Product"
+        options={{ tabBarLabel: "Product" }}
+        component={ProductScreen}
       />
 
       {init.isAuth === true && (
