@@ -1,9 +1,20 @@
-import { IProductModel } from "./productModel";
-
 export type INavigationParamList = {
   Main: undefined;
   Home: undefined;
   Register: undefined;
+  Product: undefined;
+  MyProduct: undefined;
+  CreateMyProduct: undefined;
+  EditMyProduct: { id: string };
+  DetailProduct: { id: string };
+  Auction: undefined;
+  DetailAuction: { id: string };
+  CreateAuction: undefined;
   Login: undefined;
+  Address: undefined;
   Profile: undefined;
+  EditProfile: { id: string };
+  Settings: undefined;
+  Order: undefined;
+  Notification: undefined;
 };
