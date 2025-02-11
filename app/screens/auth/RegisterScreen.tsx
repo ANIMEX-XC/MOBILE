@@ -14,10 +14,8 @@ import {
   Button,
   ButtonText,
 } from "@/app/components/ui";
-
 import { Center } from "@/app/components/ui/center";
 import { Heading } from "@/app/components/ui/heading";
-
 import {
   FormControl,
   FormControlError,
@@ -25,6 +23,7 @@ import {
 } from "@/app/components/ui/form-control";
 import { MaterialIcons } from "@expo/vector-icons";
 import { COLORS } from "@/app/configs/colors";
+import { useHttp } from "@/app/hooks/useHttp";
 
 type RegisterScreenPropsTypes = NativeStackScreenProps<
   INavigationParamList,
@@ -34,6 +33,8 @@ type RegisterScreenPropsTypes = NativeStackScreenProps<
 export default function RegisterScreen({
   navigation,
 }: RegisterScreenPropsTypes) {
+  const { handlePostRequest } = useHttp();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -43,11 +44,22 @@ export default function RegisterScreen({
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      userName: "",
-      userContact: "",
-      userPassword: "",
+      userRole: "User",
     },
   });
+
+  const onSubmit = async (payload: RegisterFormData) => {
+    try {
+      await handlePostRequest({
+        path: "/users/register",
+        body: payload,
+      });
+
+      navigation.navigate("Login");
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -55,12 +67,8 @@ export default function RegisterScreen({
     });
   }, []);
 
-  const onSubmit = (data: RegisterFormData) => {
-    console.log(data);
-  };
-
   return (
-    <View className="flex-1 bg-white justify-center px-4">
+    <View className="flex-1 bg-white justify-center px-6">
       <Center className="mb-8">
         <Heading className="text-2xl font-bold text-[#5730ef] mb-2">
           Create Account
@@ -179,7 +187,7 @@ export default function RegisterScreen({
       </Button>
 
       <Center className="flex-row space-x-1">
-        <Text className="text-gray-500">Already have an account?</Text>
+        <Text className="text-gray-500">Already have an account? </Text>
         <Text
           className="text-[#5730ef] font-bold"
           onPress={() => navigation.navigate("Login")}

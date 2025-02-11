@@ -1,15 +1,12 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { INavigationParamList } from "../../models/navigationModel";
 import { View, Text, VStack } from "@/app/components/ui";
 import { MaterialIcons } from "@expo/vector-icons";
-
 import { HStack } from "@/app/components/ui/hstack";
 import { Pressable } from "@/app/components/ui/pressable";
-import { Image } from "@/app/components/ui/image";
 import { Divider } from "@/app/components/ui/divider";
 import { ScrollView } from "@/app/components/ui/scroll-view";
-import { AlertDialog } from "@/app/components/ui/alert-dialog";
 import { Button } from "@/app/components/ui/button";
 import { ButtonText } from "@/app/components/ui";
 import {
@@ -24,6 +21,10 @@ import {
   CloseIcon,
   Heading,
 } from "@/app/components/ui";
+import { useAuthToken } from "@/app/hooks/token";
+import { useHttp } from "@/app/hooks/useHttp";
+import { IUserModel } from "@/app/models/userModel";
+import { useAppContext } from "@/app/context/app.context";
 
 type ProfileScreenPropsTypes = NativeStackScreenProps<
   INavigationParamList,
@@ -65,31 +66,52 @@ const MenuItem = ({
   </Pressable>
 );
 
+const getLevelColor = (level: string) => {
+  switch (level) {
+    case "Silver":
+      return "bg-gray-200";
+    case "Gold":
+      return "bg-yellow-100";
+    case "Platinum":
+      return "bg-blue-100";
+    default:
+      return "bg-gray-200";
+  }
+};
+
 export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
-  const userLevel = "Gold"; // Replace with actual user level from your state management
-  const userName = "John Doe"; // Replace with actual user name
-  const userEmail = "john.doe@example.com"; // Replace with actual user email
+  const { handleGetRequest } = useHttp();
+  const { removeToken } = useAuthToken();
+  const { init, setInit } = useAppContext();
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [detailProfile, setDetailProfile] = useState<IUserModel>();
+
+  const handleLogOut = async () => {
+    await removeToken();
+    setInit({
+      ...init,
+      isAuth: false,
+    });
+  };
+
+  const getMyProfile = async () => {
+    const result = await handleGetRequest({
+      path: "/users/my-profile",
+    });
+    console.log(result);
+    setDetailProfile(result);
+  };
+
+  useEffect(() => {
+    getMyProfile();
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []);
-
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case "Silver":
-        return "bg-gray-200";
-      case "Gold":
-        return "bg-yellow-100";
-      case "Platinum":
-        return "bg-blue-100";
-      default:
-        return "bg-gray-200";
-    }
-  };
 
   return (
     <View className="flex-1 bg-white">
@@ -107,11 +129,6 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
                 <Text className="text-white text-sm mx-5">My Products</Text>
               </HStack>
             </Pressable>
-            <Pressable
-            // onPress={() => navigation.navigate("Settings")}
-            >
-              <MaterialIcons name="settings" size={24} color="white" />
-            </Pressable>
           </HStack>
         </HStack>
 
@@ -120,7 +137,9 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
           <HStack className="items-center justify-between">
             <VStack>
               <Text className="text-white/80 text-sm">Total Balance</Text>
-              <Text className="text-white text-2xl font-bold">$12,500.00</Text>
+              <Text className="text-white text-2xl font-bold">
+                Rp.12,500.00
+              </Text>
             </VStack>
             <HStack space="md" className="space-x-5">
               <Pressable
@@ -153,21 +172,21 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
                 />
                 <Text className="text-white/80 text-sm">Income</Text>
               </HStack>
-              <Text className="text-white font-medium">$8,500</Text>
+              <Text className="text-white font-medium">Rp.8,500,000</Text>
             </VStack>
             <VStack className="items-center">
               <HStack className="items-center space-x-1">
                 <MaterialIcons name="arrow-upward" size={16} color="#FF4B4B" />
                 <Text className="text-white/80 text-sm">Spending</Text>
               </HStack>
-              <Text className="text-white font-medium">$4,000</Text>
+              <Text className="text-white font-medium">Rp.400,000</Text>
             </VStack>
             <VStack className="items-center">
               <HStack className="items-center space-x-1">
                 <MaterialIcons name="pending" size={16} color="#FFB800" />
                 <Text className="text-white/80 text-sm">Pending</Text>
               </HStack>
-              <Text className="text-white font-medium">$2,300</Text>
+              <Text className="text-white font-medium">Rp.2,000,000</Text>
             </VStack>
           </HStack>
         </View>
@@ -177,23 +196,25 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
       <View className="px-4 -mt-4">
         <View className="bg-white rounded-2xl p-4 shadow-sm">
           <HStack className="items-center space-x-4">
-            <Image
-              source={{ uri: "https://example.com/avatar.jpg" }}
-              alt="Profile"
-              className="w-20 h-20 rounded-full"
-            />
+            <View className="w-20 h-20 rounded-full bg-gray-100 items-center mr-4 justify-center">
+              <MaterialIcons name="person" size={40} color="#5730ef" />
+            </View>
             <VStack className="flex-1">
-              <Text className="text-xl font-bold">{userName}</Text>
-              <Text className="text-gray-500">{userEmail}</Text>
+              <Text className="text-xl font-bold">
+                {detailProfile?.userName || "_"}
+              </Text>
+              <Text className="text-gray-500">
+                {detailProfile?.userContact || "_"}
+              </Text>
               <HStack className="items-center space-x-2 mt-1">
                 <MaterialIcons name="emoji-events" size={20} color="#FFD700" />
                 <View
                   className={`px-3 py-1 rounded-full ${getLevelColor(
-                    userLevel
+                    detailProfile?.userLevel || "Silver"
                   )}`}
                 >
                   <Text className="text-sm font-medium">
-                    {userLevel} Member
+                    {detailProfile?.userLevel || "Silver"} Member
                   </Text>
                 </View>
               </HStack>
@@ -302,7 +323,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenPropsTypes) {
             <Button
               onPress={() => {
                 setShowLogoutModal(false);
-                navigation.navigate("Login");
+                handleLogOut();
               }}
             >
               <ButtonText>Logout</ButtonText>

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { INavigationParamList } from "../../models/navigationModel";
 import { View, Text, Input, InputField, InputSlot } from "@/app/components/ui";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -19,6 +19,7 @@ import {
   Button,
   ButtonText,
 } from "@/app/components/ui";
+import { productData } from "@/app/constants/products";
 
 type MyProductScreenPropsTypes = NativeStackScreenProps<
   INavigationParamList,
@@ -29,62 +30,7 @@ export default function MyProductScreen({
   navigation,
 }: MyProductScreenPropsTypes) {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: "1",
-      name: "Golden Retriever",
-      breed: "Golden Retriever",
-      image: "https://example.com/golden.jpg",
-      price: 1500,
-      location: "New York, NY",
-      isAuction: true,
-      timeLeft: "2h 15m",
-      currentBid: 1500,
-      seller: {
-        name: "John Doe",
-        verified: true,
-      },
-    },
-    {
-      id: "2",
-      name: "Golden Retriever",
-      breed: "Golden Retriever",
-      image: "https://example.com/golden.jpg",
-      price: 1500,
-      location: "New York, NY",
-      isAuction: false,
-      seller: {
-        name: "John Doe",
-        verified: true,
-      },
-    },
-    {
-      id: "3",
-      name: "Golden Retriever",
-      breed: "Golden Retriever",
-      image: "https://example.com/golden.jpg",
-      price: 1500,
-      location: "New York, NY",
-      isAuction: false,
-      seller: {
-        name: "John Doe",
-        verified: true,
-      },
-    },
-    {
-      id: "4",
-      name: "Golden Retriever",
-      breed: "Golden Retriever",
-      image: "https://example.com/golden.jpg",
-      price: 1500,
-      location: "New York, NY",
-      isAuction: false,
-      seller: {
-        name: "John Doe",
-        verified: true,
-      },
-    },
-  ]); // Replace with your data
+  const [myProducts, setMyProducts] = useState<Product[]>([]); // Replace with your data
 
   const categories = [
     { id: "all", name: "All Pets", icon: "pets" },
@@ -115,11 +61,15 @@ export default function MyProductScreen({
       // Close the modal
       setShowDeleteModal(false);
       setSelectedProductId(null);
-      setProducts(
-        products.filter((product) => product.id !== selectedProductId)
+      setMyProducts(
+        myProducts.filter((product) => product.id !== selectedProductId)
       );
     }
   };
+
+  useEffect(() => {
+    setMyProducts(productData);
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -130,32 +80,12 @@ export default function MyProductScreen({
 
   return (
     <View className="flex-1 bg-gray-50">
-      {/* Header */}
-      <View className="pt-12 px-4 bg-white">
-        <HStack className="justify-between items-center mb-4">
-          <HStack className="items-center space-x-2">
-            <Pressable onPress={() => navigation.goBack()}>
-              <MaterialIcons name="arrow-back" size={24} color="#5730ef" />
-            </Pressable>
-            <Text className="text-xl font-bold">My Products</Text>
-          </HStack>
-          <Pressable
-            onPress={() => navigation.navigate("CreateMyProduct")}
-            className="bg-[#5730ef] px-4 py-2 rounded-full"
-          >
-            <HStack className="items-center space-x-1">
-              <MaterialIcons name="add" size={20} color="white" />
-              <Text className="text-white">Add Pet</Text>
-            </HStack>
-          </Pressable>
-        </HStack>
-
-        {/* Search Bar */}
+      <View className="pt-8 px-4 bg-white">
         <Input className="bg-gray-50 rounded-xl mb-4">
           <InputSlot className="pl-3">
             <MaterialIcons name="search" size={20} color="#666" />
           </InputSlot>
-          <InputField placeholder="Search your pets..." className="h-12" />
+          <InputField placeholder="Search..." size="xl" />
         </Input>
 
         {/* Categories */}
@@ -197,7 +127,7 @@ export default function MyProductScreen({
 
       {/* Product Grid */}
       <FlatList
-        data={products}
+        data={myProducts}
         renderItem={({ item }) => (
           <View className="relative w-[48%]">
             <ProductCard
@@ -251,6 +181,14 @@ export default function MyProductScreen({
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/* Add Floating Action Button */}
+      <Pressable
+        onPress={() => navigation.navigate("CreateMyProduct")}
+        className="absolute bottom-6 right-6 w-14 h-14 bg-[#5730ef] rounded-full items-center justify-center shadow-lg"
+      >
+        <MaterialIcons name="add" size={30} color="white" />
+      </Pressable>
     </View>
   );
 }
